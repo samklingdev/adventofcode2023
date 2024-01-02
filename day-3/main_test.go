@@ -8,17 +8,26 @@ var tests = []struct {
 	input    string
 	expected int
 }{
-	{`1abc2
-	pqr3stu8vwx
-	a1b2c3d4e5f
-	treb7uchet`, 142},
-	{`two1nine
-	eightwothree
-	abcone2threexyz
-	xtwone3four
-	4nineeightseven2
-	zoneight234
-7pqrstsixteen`, 281},
+	{`467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..`, 4361},
+	{`467..114..
+..*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..`, 467835},
 }
 
 func assert(t *testing.T, result, expected int) {
