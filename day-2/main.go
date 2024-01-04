@@ -11,22 +11,26 @@ import (
 )
 
 func main() {
-	firstPart()
-	secondPart()
-}
-
-func firstPart() {
 	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	result := part1(content)
+	fmt.Println("Result part1: ", result)
+
+	result = part2(content)
+	fmt.Println("Result part2: ", result)
+}
+
+func part1(content []byte) int {
+	games := strings.Split(string(content), "\n")
 
 	maxRed := 12
 	maxGreen := 13
 	maxBlue := 14
 
 	result := 0
-	games := strings.Split(string(content), "\n")
 	for _, game := range games {
 		gameId := getGameID(game)
 		redBalls := getBallsByColor(game, "red")
@@ -43,17 +47,13 @@ func firstPart() {
 			result += gameId
 		}
 	}
-	fmt.Println("Result: ", result)
+	return result
 }
 
-func secondPart() {
-	content, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	result := 0
+func part2(content []byte) int {
 	games := strings.Split(string(content), "\n")
+	result := 0
+
 	for _, game := range games {
 		redBalls := getBallsByColor(game, "red")
 		blueBalls := getBallsByColor(game, "blue")
@@ -65,7 +65,7 @@ func secondPart() {
 
 		result += mRed * mBlue * mGreen
 	}
-	fmt.Println("Result: ", result)
+	return result
 }
 
 func getGameID(game string) int {

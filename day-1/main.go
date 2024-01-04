@@ -22,24 +22,30 @@ var words = map[string]rune{
 }
 
 func main() {
-	firstPart()
-	secondPart()
-}
-
-func firstPart() {
-	content, err := os.ReadFile("input.txt")
+	content, err := os.ReadFile("test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var result int
+	result := part1(content)
+	fmt.Println("Result part1: ", result)
+	result = part2(content)
+	fmt.Println("Result part2: ", result)
+}
+
+func part1(content []byte) int {
 	lines := strings.Split(string(content), "\n")
+
+	var result int
 	for _, line := range lines {
 		numChars := []rune{}
 		for _, c := range line {
 			if unicode.IsDigit(c) {
 				numChars = append(numChars, c)
 			}
+		}
+		if len(numChars) == 0 {
+			continue
 		}
 		first := numChars[0]
 		last := numChars[len(numChars)-1]
@@ -49,16 +55,12 @@ func firstPart() {
 		}
 		result += intValue
 	}
-	fmt.Println("Sum: ", result)
+	return result
 }
 
-func secondPart() {
-	content, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func part2(content []byte) int {
 	lines := strings.Split(string(content), "\n")
+
 	var result int
 	for _, line := range lines {
 		numChars := []rune{}
@@ -82,5 +84,5 @@ func secondPart() {
 		}
 		result += intValue
 	}
-	fmt.Println("Sum: ", result)
+	return result
 }

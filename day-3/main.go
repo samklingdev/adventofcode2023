@@ -7,121 +7,100 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 type Point struct {
-	x int
-	y int
+	x, y int
 }
-
-type Number struct {
-	Point
-	value string
-}
-
-type Special struct {
-	Point
-	value           rune
-	adjacentNumbers []Number
-}
-
-var nums = map[Point]Number{}
-var specials = map[Point]Special{}
 
 func main() {
-	generateMaps()
-	firstPart()
-	secondPart()
-}
-
-func generateMaps() {
-	content, err := os.ReadFile("input.txt")
+	content, err := os.ReadFile("test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	lines := strings.Split(string(content), "\r\n")
+	result := part1(content)
+	fmt.Println("Result part1: ", result)
+
+	result = part2(content)
+	fmt.Println("Result part2: ", result)
+}
+
+func part1(content []byte) int {
+	symbols := getSymbols(content)
+	engineParts := getEngineParts(content, symbols)
+
+	result := 0
+	for _, parts := range engineParts {
+		for _, part := range parts {
+			result += part
+		}
+	}
+
+	return result
+}
+
+func part2(content []byte) int {
+	symbols := getSymbols(content)
+	engineParts := getEngineParts(content, symbols)
+
+	result := 0
+	for p, adjecents := range engineParts {
+		if symbols[p] == '*' && len(adjecents) == 2 {
+			result += adjecents[0] * adjecents[1]
+		}
+	}
+
+	return result
+}
+
+func getSymbols(content []byte) map[Point]rune {
+	var symbols = map[Point]rune{}
+
+	lines := strings.Split(string(content), "\n")
 	for y, line := range lines {
-		digitsReg := regexp.MustCompile(`\d+`)
-		specialReg := regexp.MustCompile(`[^0-9.]`)
-		numbersMatches := digitsReg.FindAllStringIndex(line, -1)
-		specialMatches := specialReg.FindAllStringIndex(line, -1)
+		for x, r := range line {
+			if r != '.' && !unicode.IsDigit(r) {
+				symbols[Point{x, y}] = r
+			}
+		}
+	}
+	return symbols
+}
 
-		for _, match := range numbersMatches {
+func getEngineParts(content []byte, symbols map[Point]rune) map[Point][]int {
+	var engineParts = map[Point][]int{}
+
+	re := regexp.MustCompile(`\d+`)
+	directions := []Point{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
+
+	lines := strings.Split(string(content), "\n")
+	for y, line := range lines {
+		matches := re.FindAllStringIndex(line, -1)
+		for _, match := range matches {
 			start, end := match[0], match[1]
+			keys := map[Point]struct{}{}
+			// engine parts must be adjecent to a symbol to be valid
+			for x := start; x < end; x++ {
+				for _, direction := range directions {
+					keys[Point{x + direction.x, y + direction.y}] = struct{}{}
+				}
+			}
+
 			number := line[start:end]
-			fmt.Printf("Number: %s, Position: %d,%d\n", number, start, y)
-			nums[Point{start, y}] = Number{Point{start, y}, number}
-		}
-
-		for _, match := range specialMatches {
-			start := match[0]
-			char := line[start]
-			fmt.Printf("Special: %s, Position: %d,%d\n", string(char), start, y)
-			specials[Point{start, y}] = Special{Point{start, y}, rune(char), []Number{}}
-		}
-
-	}
-}
-
-func firstPart() {
-	res := 0
-	for _, num := range nums {
-		if hasAdjacentSymbol(num) {
-			n, err := strconv.Atoi(num.value)
+			num, err := strconv.Atoi(number)
 			if err != nil {
 				log.Fatal(err)
 			}
-			res += n
-		}
-	}
-	fmt.Println("Result: ", res)
-}
-
-func secondPart() {
-	res := 0
-	for _, s := range specials {
-		fmt.Printf("Special: %s, Adjacent numbers: %v\n", string(s.value), s.adjacentNumbers)
-		if s.value == '*' && len(s.adjacentNumbers) == 2 {
-			num1, err := strconv.Atoi(s.adjacentNumbers[0].value)
-			if err != nil {
-				log.Fatal(err)
+			for p := range keys {
+				if _, ok := symbols[p]; ok {
+					// save symbol point and all neighbouring numbers as engine parts
+					engineParts[p] = append(engineParts[p], num)
+				}
 			}
-			num2, err := strconv.Atoi(s.adjacentNumbers[1].value)
-			if err != nil {
-				log.Fatal(err)
-			}
-			res += num1 * num2
+
 		}
 	}
-	fmt.Println("Result: ", res)
-}
-
-func isSymbolAt(x, y int, num Number) bool {
-	point := Point{x, y}
-	if s, ok := specials[point]; ok {
-		fmt.Printf("Special: %+v", s)
-		s.adjacentNumbers = append(s.adjacentNumbers, num)
-		specials[point] = s // Put the modified value back in the map
-		return true
-	}
-	return false
-}
-
-func hasAdjacentSymbol(num Number) bool {
-	for i := 0; i < len(num.value); i++ {
-		// Check the eight possible adjacent positions
-		if isSymbolAt(num.x-1, num.y-1, num) ||
-			isSymbolAt(num.x, num.y-1, num) ||
-			isSymbolAt(num.x+1, num.y-1, num) ||
-			isSymbolAt(num.x-1, num.y, num) ||
-			isSymbolAt(num.x+1, num.y, num) ||
-			isSymbolAt(num.x-1, num.y+1, num) ||
-			isSymbolAt(num.x, num.y+1, num) ||
-			isSymbolAt(num.x+1, num.y+1, num) {
-			return true
-		}
-		num.x++ // Move to the next character in the number
-	}
-	return false
+	return engineParts
 }
