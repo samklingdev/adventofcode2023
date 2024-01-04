@@ -16,10 +16,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// result := part1(content)
-	// fmt.Println("Result part1: ", result)
+	result := part1(content)
+	fmt.Println("Result part1: ", result)
 
-	result := part2(content)
+	result = part2(content)
 	fmt.Println("Result part2: ", result)
 }
 
@@ -59,47 +59,32 @@ func part2(content []byte) int {
 	start := "A"
 	end := "Z"
 
-	nodes := []string{}
+	startNodes := []string{}
 	for k := range network {
 		if strings.HasSuffix(k, start) {
-			nodes = append(nodes, k)
+			startNodes = append(startNodes, k)
 		}
 	}
 
-	steps := 0
+	repeatCycles := []int{}
 
-	// keep going until all nodes end with Z
-	for !allEndsWith(nodes, end) {
-		i := steps % len(directions)
-		d := directions[i]
-
-		// fmt.Println("Nodes:", nodes)
-		// fmt.Println("Dir:", d)
-		// wait for keyboard input
-		// fmt.Scanln()
-
-		steps++
-		fmt.Println("Step:", steps)
-		if d == 'L' {
-			for i, n := range nodes {
-				nodes[i] = network[n][0]
+	// keep going until we got all repeat cycles
+	for _, node := range startNodes {
+		steps := 0
+		for !strings.HasSuffix(node, end) {
+			i := steps % len(directions)
+			d := directions[i]
+			if d == 'L' {
+				node = network[node][0]
+			} else {
+				node = network[node][1]
 			}
-		} else {
-			for i, n := range nodes {
-				nodes[i] = network[n][1]
-			}
+			steps++
 		}
+		repeatCycles = append(repeatCycles, steps)
 	}
-	return steps
-}
-
-func allEndsWith(nodes []string, end string) bool {
-	for _, n := range nodes {
-		if !strings.HasSuffix(n, end) {
-			return false
-		}
-	}
-	return true
+	lcm := LCM(repeatCycles[0], repeatCycles[1], repeatCycles[2:]...)
+	return lcm
 }
 
 func parse(content []byte) (Network, string, error) {
@@ -124,4 +109,23 @@ func parse(content []byte) (Network, string, error) {
 	}
 
 	return network, directions, nil
+}
+
+// greatest common divisor (GCD) via Euclidean algorithm
+func GCD(a, b int) int {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+// find Least Common Multiple (LCM) via GCD
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
 }

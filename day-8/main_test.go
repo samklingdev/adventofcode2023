@@ -31,7 +31,7 @@ ZZZ = (ZZZ, ZZZ)`, expected: 6},
 22B = (22C, 22C)
 22C = (22Z, 22Z)
 22Z = (22B, 22B)
-XXX = (XXX, XXX)`, expected: 0},
+XXX = (XXX, XXX)`, expected: 6},
 }
 
 func assert(t *testing.T, result, expected int) {
@@ -41,8 +41,8 @@ func assert(t *testing.T, result, expected int) {
 }
 
 func TestMain(t *testing.T) {
-	// assert(t, part1([]byte(tests[0].input)), tests[0].expected)
-	// assert(t, part1([]byte(tests[1].input)), tests[1].expected)
+	assert(t, part1([]byte(tests[0].input)), tests[0].expected)
+	assert(t, part1([]byte(tests[1].input)), tests[1].expected)
 
 	assert(t, part2([]byte(tests[2].input)), tests[2].expected)
 }
