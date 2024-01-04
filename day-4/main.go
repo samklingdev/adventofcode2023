@@ -9,11 +9,20 @@ import (
 )
 
 func main() {
-	firstPart()
-	secondPart()
+	content, err := os.ReadFile("test.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := part1(content)
+	fmt.Println("Part 1:", result)
+
+	result = part2(content)
+	fmt.Println("Part 2:", result)
+
 }
 
-func firstPart() {
+func part1(content []byte) int {
 	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +37,7 @@ func firstPart() {
 		points := getPoints(line)
 		totalPoints += points
 	}
-	fmt.Println("Total points:", totalPoints)
+	return totalPoints
 }
 
 type Card struct {
@@ -36,13 +45,8 @@ type Card struct {
 	copies  int
 }
 
-func secondPart() {
-	content, err := os.ReadFile("test.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	lines := strings.Split(string(content), "\r\n")
+func part2(content []byte) int {
+	lines := strings.Split(string(content), "\n")
 	cardPoints := make(map[int]*Card)
 
 	for i, line := range lines {
@@ -61,6 +65,7 @@ func secondPart() {
 		// I dont know what to do here
 		fmt.Printf("%v", card)
 	}
+	return 0
 }
 
 func getPoints(line string) int {

@@ -56,9 +56,12 @@ func part2(content []byte) int {
 		log.Fatal(err)
 	}
 
+	start := "A"
+	end := "Z"
+
 	nodes := []string{}
 	for k := range network {
-		if strings.HasSuffix(k, "A") {
+		if strings.HasSuffix(k, start) {
 			nodes = append(nodes, k)
 		}
 	}
@@ -66,7 +69,7 @@ func part2(content []byte) int {
 	steps := 0
 
 	// keep going until all nodes end with Z
-	for !allEndsWithZ(nodes) {
+	for !allEndsWith(nodes, end) {
 		i := steps % len(directions)
 		d := directions[i]
 
@@ -90,9 +93,9 @@ func part2(content []byte) int {
 	return steps
 }
 
-func allEndsWithZ(nodes []string) bool {
+func allEndsWith(nodes []string, end string) bool {
 	for _, n := range nodes {
-		if !strings.HasSuffix(n, "Z") {
+		if !strings.HasSuffix(n, end) {
 			return false
 		}
 	}
