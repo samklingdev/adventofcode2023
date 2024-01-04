@@ -8,17 +8,9 @@ var tests = []struct {
 	input    string
 	expected int
 }{
-	{`1abc2
-	pqr3stu8vwx
-	a1b2c3d4e5f
-	treb7uchet`, 142},
-	{`two1nine
-	eightwothree
-	abcone2threexyz
-	xtwone3four
-	4nineeightseven2
-	zoneight234
-7pqrstsixteen`, 281},
+	{input: `Time:      7  15   30
+Distance:  9  40  200`, expected: 288},
+	{expected: 71503},
 }
 
 func assert(t *testing.T, result, expected int) {
@@ -29,5 +21,5 @@ func assert(t *testing.T, result, expected int) {
 
 func TestMain(t *testing.T) {
 	assert(t, part1([]byte(tests[0].input)), tests[0].expected)
-	assert(t, part2([]byte(tests[1].input)), tests[1].expected)
+	assert(t, part2([]byte(tests[0].input)), tests[1].expected)
 }

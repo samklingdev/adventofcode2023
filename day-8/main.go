@@ -8,28 +8,99 @@ import (
 	"strings"
 )
 
+type Network = map[string][2]string
+
 func main() {
-	content, err := os.ReadFile("test.txt")
+	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	result := part1(content)
-	fmt.Println("Result part1: ", result)
+	// result := part1(content)
+	// fmt.Println("Result part1: ", result)
 
-	/*
-		network, directions, err = handleFile("input.txt")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		result = part2(network, directions)
-		fmt.Println("Result part2: ", result)
-	*/
+	result := part2(content)
+	fmt.Println("Result part2: ", result)
 }
 
-func parse(content []byte) (map[string][2]string, string, error) {
-	network := make(map[string][2]string)
+func part1(content []byte) int {
+	network, directions, err := parse(content)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	start := "AAA"
+	end := "ZZZ"
+
+	steps := 0
+	// keep going until we hit ZZZ
+	for start != end {
+		i := steps % len(directions)
+		d := directions[i]
+		if start == end {
+			break
+		}
+		steps++
+		if d == 'L' {
+			start = network[start][0]
+		} else {
+			start = network[start][1]
+		}
+	}
+	return steps
+}
+
+func part2(content []byte) int {
+	network, directions, err := parse(content)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	nodes := []string{}
+	for k := range network {
+		if strings.HasSuffix(k, "A") {
+			nodes = append(nodes, k)
+		}
+	}
+
+	steps := 0
+
+	// keep going until all nodes end with Z
+	for !allEndsWithZ(nodes) {
+		i := steps % len(directions)
+		d := directions[i]
+
+		// fmt.Println("Nodes:", nodes)
+		// fmt.Println("Dir:", d)
+		// wait for keyboard input
+		// fmt.Scanln()
+
+		steps++
+		fmt.Println("Step:", steps)
+		if d == 'L' {
+			for i, n := range nodes {
+				nodes[i] = network[n][0]
+			}
+		} else {
+			for i, n := range nodes {
+				nodes[i] = network[n][1]
+			}
+		}
+	}
+	return steps
+}
+
+func allEndsWithZ(nodes []string) bool {
+	for _, n := range nodes {
+		if !strings.HasSuffix(n, "Z") {
+			return false
+		}
+	}
+	return true
+}
+
+func parse(content []byte) (Network, string, error) {
+	network := make(Network)
 
 	blocks := strings.Split(string(content), "\n\n")
 	if len(blocks) != 2 {
@@ -50,33 +121,4 @@ func parse(content []byte) (map[string][2]string, string, error) {
 	}
 
 	return network, directions, nil
-}
-
-func part1(input []byte) int {
-	network, directions, err := parse(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("network:", network)
-	fmt.Println("directions:", directions)
-	start := "AAA"
-	end := "ZZZ"
-
-	steps := 0
-	// keep going until we hit ZZZ
-	for start != end {
-		i := steps % len(directions)
-		d := directions[i]
-		if start == end {
-			break
-		}
-		steps++
-		if d == 'L' {
-			start = network[start][0]
-		} else {
-			start = network[start][1]
-		}
-	}
-	return steps
 }

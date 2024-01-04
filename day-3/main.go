@@ -31,9 +31,6 @@ func part1(content []byte) int {
 	symbols := getSymbols(content)
 	engineParts := getEngineParts(content, symbols)
 
-	fmt.Println(symbols)
-	fmt.Println(engineParts)
-
 	result := 0
 	for _, parts := range engineParts {
 		for _, part := range parts {
@@ -79,7 +76,6 @@ func getEngineParts(content []byte, symbols map[Point]rune) map[Point][]int {
 	directions := []Point{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
 
 	lines := strings.Split(string(content), "\n")
-	fmt.Println(lines)
 	for y, line := range lines {
 		matches := re.FindAllStringIndex(line, -1)
 		for _, match := range matches {

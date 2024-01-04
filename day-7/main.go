@@ -13,55 +13,63 @@ type Hand struct {
 	bid   int
 }
 
-var hands []Hand
 var orderPart1 = "AKQJT98765432"
 var orderPart2 = "AKQT98765432J"
 
-func init() {
+func main() {
 	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	lines := strings.Split(string(content), "\r\n")
-	hands = make([]Hand, len(lines))
+	result := part1(content)
+	fmt.Println("Part 1 result:", result)
+
+	result = part2(content)
+	fmt.Println("Part 2 result:", result)
+}
+
+func part1(content []byte) int {
 	var cards string
+	lines := strings.Split(string(content), "\n")
+	hands := make([]Hand, len(lines))
+
 	for i, line := range lines {
 		fmt.Sscanf(line, "%s %d", &cards, &hands[i].bid)
 		hands[i].cards = []rune(cards)
 	}
-}
 
-func main() {
-	part1()
-	part2()
-}
-
-func part1() {
 	sort.Slice(hands, func(i, j int) bool {
 		return sortHandsPart1(hands[i], hands[j])
 	})
 
-	var result int
+	result := 0
 	for i, h := range hands {
 		result += h.bid * (i + 1)
 	}
 
-	fmt.Println("Part 1 result:", result)
+	return result
 }
 
-func part2() {
+func part2(content []byte) int {
+	var cards string
+	lines := strings.Split(string(content), "\n")
+	hands := make([]Hand, len(lines))
+
+	for i, line := range lines {
+		fmt.Sscanf(line, "%s %d", &cards, &hands[i].bid)
+		hands[i].cards = []rune(cards)
+	}
 
 	sort.Slice(hands, func(i, j int) bool {
 		return sortHandsPart2(hands[i], hands[j])
 	})
 
-	var result int
+	result := 0
 	for i, h := range hands {
 		result += h.bid * (i + 1)
 	}
-
-	fmt.Println("Part 2 result:", result)
+	return result
 }
 
 func sortHandsPart2(a Hand, b Hand) bool {
@@ -126,6 +134,7 @@ func sortHandsPart2(a Hand, b Hand) bool {
 }
 
 func sortHandsPart1(a Hand, b Hand) bool {
+
 	aMap, bMap := map[rune]int{}, map[rune]int{}
 	aStr, bStr := []int{}, []int{}
 

@@ -55,10 +55,10 @@ func part2(content []byte) int {
 		seedStr := seeds[i]
 		rangeStr := seeds[i+1]
 		seed, _ := strconv.Atoi(seedStr)
-		r, _ := strconv.Atoi(rangeStr)
+		rng, _ := strconv.Atoi(rangeStr)
 		p := 0
-		oneP := r / 100
-		for j := seed; j < seed+r; j++ {
+		oneP := rng / 100
+		for j := seed; j < seed+rng; j++ {
 			if j-seed > p*oneP {
 				p++
 			}

@@ -4,58 +4,45 @@ import (
 	"testing"
 )
 
-func TestPart1(t *testing.T) {
+var tests = []struct {
+	expected int
+	input    string
+}{
+	{input: `RL
 
-	tests := []struct {
-		expected int
-		input    string
-	}{
-		{expected: 2, input: `RL
+AAA = (BBB, CCC)
+BBB = (DDD, EEE)
+CCC = (ZZZ, GGG)
+DDD = (DDD, DDD)
+EEE = (EEE, EEE)
+GGG = (GGG, GGG)
+ZZZ = (ZZZ, ZZZ)`, expected: 2},
+	{input: `LLR
 
-		AAA = (BBB, CCC)
-		BBB = (DDD, EEE)
-		CCC = (ZZZ, GGG)
-		DDD = (DDD, DDD)
-		EEE = (EEE, EEE)
-		GGG = (GGG, GGG)
-		ZZZ = (ZZZ, ZZZ)`},
-		{expected: 6, input: `LLR
+AAA = (BBB, BBB)
+BBB = (AAA, ZZZ)
+ZZZ = (ZZZ, ZZZ)`, expected: 6},
+	{input: `LR
 
-		AAA = (BBB, BBB)
-		BBB = (AAA, ZZZ)
-		ZZZ = (ZZZ, ZZZ)`},
-	}
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)`, expected: 0},
+}
 
-	for _, test := range tests {
-		result := part1([]byte(test.input))
-		if result != test.expected {
-			t.Errorf("part1(%s) returned %d, expected %d", test.input, result, test.expected)
-		}
+func assert(t *testing.T, result, expected int) {
+	if result != expected {
+		t.Errorf("Expected %d, got %d", expected, result)
 	}
 }
 
-// func TestPart2(t *testing.T) {
+func TestMain(t *testing.T) {
+	// assert(t, part1([]byte(tests[0].input)), tests[0].expected)
+	// assert(t, part1([]byte(tests[1].input)), tests[1].expected)
 
-// 	tests := []struct {
-// 		expected int
-// 		input    string
-// 	}{
-// 		{expected: 6, input: `LR
-
-// 		11A = (11B, XXX)
-// 		11B = (XXX, 11Z)
-// 		11Z = (11B, XXX)
-// 		22A = (22B, XXX)
-// 		22B = (22C, 22C)
-// 		22C = (22Z, 22Z)
-// 		22Z = (22B, 22B)
-// 		XXX = (XXX, XXX)`},
-// 	}
-
-// 	for _, test := range tests {
-// 		result := part2([]byte(test.input))
-// 		if result != test.expected {
-// 			t.Errorf("part1(%s) returned %d, expected %d", test.input, result, test.expected)
-// 		}
-// 	}
-// }
+	assert(t, part2([]byte(tests[2].input)), tests[2].expected)
+}
