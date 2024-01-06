@@ -43,6 +43,5 @@ func assert(t *testing.T, result, expected int) {
 func TestMain(t *testing.T) {
 	assert(t, part1([]byte(tests[0].input)), tests[0].expected)
 	assert(t, part1([]byte(tests[1].input)), tests[1].expected)
-
 	assert(t, part2([]byte(tests[2].input)), tests[2].expected)
 }

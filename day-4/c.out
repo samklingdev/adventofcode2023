@@ -1,0 +1,20 @@
+mode: set
+github.com/samklingdev/adventofcode2023/day-4/main.go:11.13,13.16 2 0
+github.com/samklingdev/adventofcode2023/day-4/main.go:13.16,15.3 1 0
+github.com/samklingdev/adventofcode2023/day-4/main.go:17.2,21.32 4 0
+github.com/samklingdev/adventofcode2023/day-4/main.go:25.32,30.29 3 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:30.29,33.3 2 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:34.2,34.20 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:37.32,41.29 3 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:41.29,44.33 3 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:44.33,46.4 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:49.2,50.29 2 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:50.29,52.3 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:53.2,53.15 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:56.34,68.47 8 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:68.47,69.33 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:69.33,71.4 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:73.2,75.28 3 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:75.28,76.21 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:76.21,78.4 1 1
+github.com/samklingdev/adventofcode2023/day-4/main.go:80.2,80.14 1 1
