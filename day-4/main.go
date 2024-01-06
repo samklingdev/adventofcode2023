@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	content, err := os.ReadFile("test.txt")
+	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,67 +23,37 @@ func main() {
 }
 
 func part1(content []byte) int {
-	content, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	lines := strings.Split(string(content), "\r\n")
+	lines := strings.Split(string(content), "\n")
 
 	totalPoints := 0
 
 	for _, line := range lines {
-
-		points := getPoints(line)
-		totalPoints += points
+		winners := getMatches(line)
+		totalPoints += int(math.Pow(2, float64(winners-1)))
 	}
 	return totalPoints
 }
 
-type Card struct {
-	matches int
-	copies  int
-}
-
 func part2(content []byte) int {
 	lines := strings.Split(string(content), "\n")
-	cardPoints := make(map[int]*Card)
+	cards := make([]int, len(lines))
 
 	for i, line := range lines {
-		matches := getMatches(line)
-		cardPoints[i] = &Card{matches, 0}
-		if matches > 0 {
-			for ii := i + 1; ii <= matches; ii++ {
-				if cardPoints[ii] != nil {
-					cardPoints[ii].copies++
-				}
-			}
+		winners := getMatches(line)
+		cards[i]++
+		for j := 1; j <= winners; j++ {
+			cards[i+j] += cards[i]
 		}
 	}
 
-	for _, card := range cardPoints {
-		// I dont know what to do here
-		fmt.Printf("%v", card)
+	result := 0
+	for _, card := range cards {
+		result += card
 	}
-	return 0
-}
-
-func getPoints(line string) int {
-	points := 0
-
-	count := getMatches(line)
-	if count == 0 {
-		points = 0
-	} else if count == 1 {
-		points = 1
-	} else {
-		points = int(math.Pow(2, float64(count-1)))
-	}
-	return points
+	return result
 }
 
 func getMatches(line string) int {
-	count := 0
 
 	cardParts := strings.Split(line, ":")
 	numberParts := strings.Split(cardParts[1], "|")
@@ -100,7 +70,7 @@ func getMatches(line string) int {
 			winningNums[n] = true
 		}
 	}
-
+	count := 0
 	numbers := strings.Split(numStr, " ")
 	for _, n := range numbers {
 		if winningNums[n] {
