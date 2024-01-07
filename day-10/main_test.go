@@ -8,7 +8,16 @@ var tests = []struct {
 	input    string
 	expected int
 }{
-	{input: ``, expected: 0},
+	{input: `.....
+.S-7.
+.|.|.
+.L-J.
+.....`, expected: 4},
+	{input: `..F7.
+.FJ|.
+SJ.L7
+|F--J
+LJ...`, expected: 8},
 }
 
 func assert(t *testing.T, result, expected int) {
